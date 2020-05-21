@@ -1,0 +1,48 @@
+---
+- name: Installing and running the Node Exporter
+  hosts: monitoring_nodes
+  gather_facts: no
+  become: yes
+
+  vars:
+    node_exporter_version: '0.18.1'
+    node_exporter_binary_install_dir: '/usr/local/bin'
+
+  tasks:
+
+    - name: Ensure "node_exporter" system user exists
+      user:
+        name: node_exporter
+        system: true
+        shell: /sbin/nologin
+        create_home: false
+
+    - name: Download and unarchive Node Exporter (Skip when already exists!)
+      unarchive:
+        src: https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz
+        dest: "{{ node_exporter_binary_install_dir }}"
+        extra_opts: [--strip-components=1]
+        remote_src: yes
+        mode: 0755
+        owner: root
+        group: root
+        creates: "{{ node_exporter_binary_install_dir }}/node_exporter"
+
+    - name: Configure Node Exporter as systemd service
+      template:
+        src: node_exporter.service.j2
+        dest: /etc/systemd/system/node_exporter.service
+        owner: root
+        group: root
+        mode: 0644
+      notify: "Restart node_exporter"
+
+  handlers:
+    - name: "Restart node_exporter"
+      systemd:
+        daemon_reload: yes
+        name: node_exporter.service
+        enabled: yes
+        state: restarted
+
+...

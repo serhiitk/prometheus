@@ -44,5 +44,4 @@
         name: node_exporter.service
         enabled: yes
         state: restarted
-
 ...

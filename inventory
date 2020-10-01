@@ -1,4 +1,4 @@
-#############
+###############################################################################
 [prometheus_server]
 192.168.56.141
 
@@ -7,14 +7,14 @@ ansible_user=vagrant
 ansible_private_key_file=./hosts/Prometheus-server/.vagrant/machines/default/virtualbox/private_key
 ansible_python_interpreter=/usr/bin/python
 
-#############
+###############################################################################
 [monitoring_nodes:children]
 ntp_client
 frontend
 backend
 db_hosts
 
-#-----------#
+#-----------------------------------------------------------------------------#
 [ntp_client]
 192.168.56.251
 
@@ -43,4 +43,4 @@ ansible_private_key_file=../../hw2/ansible/hosts/vm3/.vagrant/machines/default/v
 ansible_user=vagrant
 ansible_private_key_file=../../hw2/ansible/hosts/vm4/.vagrant/machines/default/virtualbox/private_key
 
-#############
+###############################################################################
